@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../data/quiz_data.dart'; // Add this import
+import '../data/quiz_data.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -7,52 +7,63 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green[50],
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Title
-              Text(
-                '⚽ Football Quiz ⚽',
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green[800],
-                  letterSpacing: 1.2,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-              
-              // Subtitle
-              Text(
-                'Test your football knowledge!',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.grey[700],
-                ),
-              ),
-              const SizedBox(height: 50),
-              
-              // Football Image/Icon
+              // Animated Football Icon
               Container(
-                width: 150,
-                height: 150,
+                width: 120,
+                height: 120,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF00B2FF), Color(0xFF0062FF)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.green, width: 3),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blue.withOpacity(0.5),
+                      blurRadius: 15,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: const Icon(
                   Icons.sports_soccer,
-                  size: 80,
-                  color: Colors.green,
+                  size: 60,
+                  color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 32),
+              
+              // Title with gradient
+              ShaderMask(
+                shaderCallback: (bounds) => const LinearGradient(
+                  colors: [Color(0xFF00B2FF), Color(0xFFFF6B35)],
+                ).createShader(bounds),
+                child: Text(
+                  'FOOTBALL QUIZ',
+                  style: TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              
+              // Subtitle
+              Text(
+                'Test your football knowledge against the best!',
+                style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 48),
               
               // Start Button
               SizedBox(
@@ -62,51 +73,52 @@ class HomeScreen extends StatelessWidget {
                     Navigator.pushNamed(context, '/quiz');
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 18),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                    elevation: 5,
+                    elevation: 8,
+                    shadowColor: Theme.of(context).colorScheme.primary.withOpacity(0.3),
                   ),
                   child: const Text(
-                    'START QUIZ',
+                    'START CHALLENGE',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 32),
               
-              // Instructions
+              // Features Grid
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.green),
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.white12),
                 ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'How to play:',
-                      style: TextStyle(
-                        fontSize: 16,
+                      'QUIZ FEATURES',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: Colors.green[800],
+                        color: Colors.white,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      '• Answer ${QuizData.totalQuestions} football questions\n' // Fixed import
-                      '• Choose the correct option\n'
-                      '• Get instant feedback\n'
-                      '• See your final score',
-                      style: const TextStyle(fontSize: 14),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _buildFeatureItem(context, '${QuizData.totalQuestions}', 'Questions'),
+                        _buildFeatureItem(context, '⚡', 'Quick Play'),
+                        _buildFeatureItem(context, '🏆', 'Leaderboard'),
+                      ],
                     ),
                   ],
                 ),
@@ -115,6 +127,37 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildFeatureItem(BuildContext context, String value, String label) {
+    return Column(
+      children: [
+        Container(
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Theme.of(context).colorScheme.primary),
+          ),
+          child: Center(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      ],
     );
   }
 }
